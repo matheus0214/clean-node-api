@@ -235,4 +235,28 @@ describe('SignUp Controller', () => {
       password: 'hy6YJ4o5Ep65fLpSUjY'
     })
   })
+
+  test('Should return 200 if valid data is provided', () => {
+    const { sut } = makeSut()
+
+    const httpRequest = {
+      body: {
+        id: 'valid_id',
+        name: 'Terry Mills',
+        email: 'zilsu@pitarcu.gs',
+        password: 'Z1fPiNQOIUzwBwG2duA1MO4t2KSg',
+        passwordConfirmation: 'Z1fPiNQOIUzwBwG2duA1MO4t2KSg'
+      }
+    }
+
+    const response = sut.handle(httpRequest)
+
+    expect(response.statusCode).toEqual(201)
+    expect(response.body).toEqual({
+      id: 'valid_id',
+      name: 'Terry Mills',
+      email: 'zilsu@pitarcu.gs',
+      password: 'Z1fPiNQOIUzwBwG2duA1MO4t2KSg'
+    })
+  })
 })
