@@ -113,4 +113,23 @@ describe('DbAddAccount UseCase', () => {
 
     await expect(promise).rejects.toThrow()
   })
+
+  test('Should return an account on success', async () => {
+    const { sut } = makeSut()
+
+    const accountData = {
+      name: 'Helen Snyder',
+      email: 'ewe@elakono.pl',
+      password: '1234'
+    }
+
+    const account = await sut.add(accountData)
+
+    expect(account).toEqual({
+      id: 'valid_id',
+      name: 'Helen Snyder',
+      email: 'ewe@elakono.pl',
+      password: 'value_encrypt'
+    })
+  })
 })
