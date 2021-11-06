@@ -6,5 +6,6 @@ module.exports = {
   coverageProvider: 'node',
   transform: {
     '.+\\.ts$': 'ts-jest'
-  }
+  },
+  preset: '@shelf/jest-mongodb'
 }
