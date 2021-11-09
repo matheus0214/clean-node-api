@@ -2,7 +2,8 @@ import {
   Authentication, InvalidParamError, MissingParamError,
   badRequest, serverError, unauthorized,
   Controller, HttpRequest, HttpResponse,
-  EmailValidator
+  EmailValidator,
+  ok
 } from './login-protocols'
 
 export class LoginController implements Controller {
@@ -34,7 +35,7 @@ export class LoginController implements Controller {
         return unauthorized()
       }
 
-      return await new Promise((resolve) => resolve({ body: {}, statusCode: 200 }))
+      return ok({ accessToken })
     } catch (error) {
       return serverError(error)
     }
