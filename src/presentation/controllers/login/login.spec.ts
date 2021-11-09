@@ -8,12 +8,12 @@ describe('Login Controller', () => {
 
     const httpRequest = {
       body: {
-        password: '123'
+        email: 'jip@majug.za'
       }
     }
 
     const httpResponse = await sut.handle(httpRequest)
 
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('password')))
   })
 })
