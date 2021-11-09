@@ -9,7 +9,7 @@
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:integration": "npm test -- --watch -c jest-integration-config.js",
     "test:staged": "jest --force-exit --passWithNoTests -c jest-staged-config.js",
-    "test:ci": "npm test -- --coverage",
+    "test:ci": "npm test -- --force-exit --coverage",
     "start": "sucrase-node ./src/main/server.ts"
   },
   "keywords": [],
