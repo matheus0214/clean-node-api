@@ -16,7 +16,7 @@ interface LoginSutTypes {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (email: string, password: string): Promise<string> {
+    async auth ({ email, password }): Promise<string> {
       return await new Promise(resolve => resolve('access_token'))
     }
   }
@@ -60,7 +60,7 @@ describe('Login Controller', () => {
 
     await sut.handle(makeFakeRequest())
 
-    expect(authSpy).toBeCalledWith('jip@majug.za', '123')
+    expect(authSpy).toBeCalledWith({ email: 'jip@majug.za', password: '123' })
   })
 
   test('Should return 401 if invalid credentials are provided', async () => {
