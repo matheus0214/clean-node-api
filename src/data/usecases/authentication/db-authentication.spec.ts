@@ -1,6 +1,12 @@
 import { AccountModel } from '../add-account/db-add-account-protocols'
 import { DbAuthentication } from './db-authentication'
-import { AuthenticationModel, HashCompare, TokenGenerator, LoadAccountByEmailRepository, UpdateAccessTokenRepository } from './db-authentication-protocols'
+import {
+  AuthenticationModel,
+  HashCompare,
+  TokenGenerator,
+  LoadAccountByEmailRepository,
+  UpdateAccessTokenRepository
+} from './db-authentication-protocols'
 
 const makeFakeAccount = (): AccountModel => {
   return {
@@ -95,7 +101,8 @@ describe('DbAuthentication UseCase', () => {
   test('Should throw if LoadAccountByEmailRepository throws', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut()
 
-    jest.spyOn(loadAccountByEmailRepositoryStub, 'load').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    jest.spyOn(loadAccountByEmailRepositoryStub, 'load')
+      .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 
     const promise = sut.auth(makeFakeAuthentication())
 
@@ -163,7 +170,8 @@ describe('DbAuthentication UseCase', () => {
   test('Should throw if TokenGenerator throws', async () => {
     const { sut, tokenGeneratorStub } = makeSut()
 
-    jest.spyOn(tokenGeneratorStub, 'generate').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    jest.spyOn(tokenGeneratorStub, 'generate')
+      .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 
     const promise = sut.auth(makeFakeAuthentication())
 
@@ -190,7 +198,8 @@ describe('DbAuthentication UseCase', () => {
   test('Should throw if UpdateAccessTokenRepository throws', async () => {
     const { sut, updateAccessTokenRepositoryStub } = makeSut()
 
-    jest.spyOn(updateAccessTokenRepositoryStub, 'update').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    jest.spyOn(updateAccessTokenRepositoryStub, 'update')
+      .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 
     const promise = sut.auth(makeFakeAuthentication())
 
