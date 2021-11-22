@@ -5,8 +5,8 @@ import {
   Authentication,
   ok,
   Validation
-} from './login-protocols'
-import { LoginController } from './login'
+} from './login-controller-protocols'
+import { LoginController } from './login-controller'
 
 interface LoginSutTypes {
   sut: Controller
