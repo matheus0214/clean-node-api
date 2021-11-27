@@ -1,7 +1,10 @@
 import request from 'supertest'
+import { hash } from 'bcrypt'
 import { MongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper'
 
 import app from '../config/app'
+
+let accountCollection
 
 describe('LoginRoutes', () => {
   beforeAll(async () => {
@@ -13,7 +16,7 @@ describe('LoginRoutes', () => {
   })
 
   beforeEach(async () => {
-    const accountCollection = await MongoHelper.getCollection('accounts')
+    accountCollection = await MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
 
@@ -28,6 +31,25 @@ describe('LoginRoutes', () => {
           passwordConfirmation: '123'
         })
         .expect(201)
+    })
+  })
+
+  describe('POST /login', () => {
+    test('Should return 200 on login', async () => {
+      jest.setTimeout(90000)
+      const hashedPassword = await hash('123', 12)
+      await accountCollection.insertOne({
+        email: 'fulfiwbur@vubo.af',
+        password: hashedPassword,
+        name: 'Viola Park'
+      })
+      await request(app)
+        .post('/api/login')
+        .send({
+          email: 'fulfiwbur@vubo.af',
+          password: '123'
+        })
+        .expect(200)
     })
   })
 })
