@@ -4,10 +4,11 @@ services:
     image: node:14.18-alpine3.12
     container_name: clean-node-api
     working_dir: /usr/app/clean-node-api
-    command: npm run dev
+    command: npm run debug
     restart: always
     ports:
       - 5050:5050
+      - 9222:9222
     volumes:
       - .:/usr/app/clean-node-api
     links:
