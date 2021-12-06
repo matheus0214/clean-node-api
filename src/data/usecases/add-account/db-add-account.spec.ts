@@ -1,10 +1,12 @@
 import { AccountModel, AddAccountModel, Hasher, AddAccountRepository } from './db-add-account-protocols'
 import { DbAddAccount } from './db-add-account'
+import { LoadAccountByEmailRepository } from '../../protocols/db/account/load-account-by-email-repository'
 
 interface DbAccountTypes {
   sut: DbAddAccount
   hasherStub: Hasher
   addAccountRepositoryStub: AddAccountRepository
+  loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
 }
 
 const makeHasher = (): Hasher => {
@@ -15,6 +17,16 @@ const makeHasher = (): Hasher => {
   }
 
   return new HasherStub()
+}
+
+const makeLoadAccountByEmailRepositoryStub = (): LoadAccountByEmailRepository => {
+  class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
+    async loadByEmail (email: string): Promise<AccountModel> {
+      return makeFakeAccount()
+    }
+  }
+
+  return new LoadAccountByEmailRepositoryStub()
 }
 
 const makeFakeAccount = (): AccountModel => ({
@@ -42,12 +54,14 @@ const makeAddAccountRepositoryStub = (): AddAccountRepository => {
 
 const makeSut = (): DbAccountTypes => {
   const hasherStub = makeHasher()
+  const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepositoryStub()
   const addAccountRepositoryStub = makeAddAccountRepositoryStub()
 
   return {
-    sut: new DbAddAccount(hasherStub, addAccountRepositoryStub),
+    sut: new DbAddAccount(hasherStub, addAccountRepositoryStub, loadAccountByEmailRepositoryStub),
     hasherStub,
-    addAccountRepositoryStub
+    addAccountRepositoryStub,
+    loadAccountByEmailRepositoryStub
   }
 }
 
@@ -102,5 +116,15 @@ describe('DbAddAccount UseCase', () => {
     const account = await sut.add(makeFakeAccountData())
 
     expect(account).toEqual(makeFakeAccount())
+  })
+
+  test('Should call LoadAccountByEmailRepository with correct email', async () => {
+    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
+
+    const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
+
+    await sut.add(makeFakeAccountData())
+
+    expect(loadSpy).toHaveBeenCalledWith(makeFakeAccount().email)
   })
 })
