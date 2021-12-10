@@ -1,5 +1,5 @@
 import { AddSurvey, AddSurveyModel, HttpRequest, Validation } from './add-survey-protocols'
-import { AddSurveyController } from './add-servey-controller'
+import { AddSurveyController } from './add-survey-controller'
 import { badRequest, serverError } from '../../../helpers/http/http-helper'
 
 interface ISutTypes {
