@@ -1,4 +1,4 @@
-import { badRequest } from '../../login/signup/signup-controller-protocols'
+import { badRequest, serverError } from '../../login/signup/signup-controller-protocols'
 import {
   AddSurvey,
   Controller,
@@ -14,21 +14,25 @@ export class AddSurveyController implements Controller {
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const error = this.validation.validate(httpRequest.body)
-    if (error) {
-      return badRequest(error)
-    }
+    try {
+      const error = this.validation.validate(httpRequest.body)
+      if (error) {
+        return badRequest(error)
+      }
 
-    const { answers, question } = httpRequest.body
+      const { answers, question } = httpRequest.body
 
-    await this.addSurvey.add({
-      answers,
-      question
-    })
+      await this.addSurvey.add({
+        answers,
+        question
+      })
 
-    return {
-      body: {},
-      statusCode: 201
+      return {
+        body: {},
+        statusCode: 201
+      }
+    } catch (error) {
+      return serverError(error)
     }
   }
 }
