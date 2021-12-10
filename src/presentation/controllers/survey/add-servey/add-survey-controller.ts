@@ -1,4 +1,4 @@
-import { badRequest, serverError } from '../../login/signup/signup-controller-protocols'
+import { badRequest, noContent, serverError } from '../../login/signup/signup-controller-protocols'
 import {
   AddSurvey,
   Controller,
@@ -27,10 +27,7 @@ export class AddSurveyController implements Controller {
         question
       })
 
-      return {
-        body: {},
-        statusCode: 201
-      }
+      return noContent()
     } catch (error) {
       return serverError(error)
     }
