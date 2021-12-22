@@ -91,4 +91,12 @@ describe('DbLoadAccountByYoken usecase', () => {
 
     expect(response).toBe(null)
   })
+
+  test('should return an account on success', async () => {
+    const { sut } = makeSut()
+
+    const response = await sut.load('any_token', 'any_role')
+
+    expect(response).toEqual(makeFakeAccount())
+  })
 })
