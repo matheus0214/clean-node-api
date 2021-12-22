@@ -3,6 +3,7 @@ import { AccessDeniedError } from '../errors'
 import { AuthMiddleware } from './auth-middleware'
 import { LoadAccountByToken } from '../../domain/usecases'
 import { AccountModel } from '../../domain/models'
+import { HttpRequest } from '../protocols'
 
 const makeFakeAccount = (): AccountModel => {
   return {
@@ -12,6 +13,12 @@ const makeFakeAccount = (): AccountModel => {
     password: 'any_password'
   }
 }
+
+const makeFakeRequest = (): HttpRequest => ({
+  headers: {
+    'x-access-token': 'valid_token'
+  }
+})
 
 interface ISutTypes {
   sut: AuthMiddleware
@@ -51,11 +58,7 @@ describe('Auth middleware', () => {
 
     const spy = jest.spyOn(loadAccountByTokenStub, 'load')
 
-    await sut.handle({
-      headers: {
-        'x-access-token': 'valid_token'
-      }
-    })
+    await sut.handle(makeFakeRequest())
 
     expect(spy).toBeCalledTimes(1)
   })
