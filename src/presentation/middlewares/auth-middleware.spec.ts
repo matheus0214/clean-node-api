@@ -18,14 +18,17 @@ interface ISutTypes {
   loadAccountByTokenStub: LoadAccountByToken
 }
 
-const makeSut = (): ISutTypes => {
+const makeLoadAccountByTokenStub = (): LoadAccountByToken => {
   class LoadAccountByTokenStub implements LoadAccountByToken {
     async load (accessToken: string, role?: string): Promise<AccountModel> {
       return makeFakeAccount()
     }
   }
+  return new LoadAccountByTokenStub()
+}
 
-  const loadAccountByTokenStub = new LoadAccountByTokenStub()
+const makeSut = (): ISutTypes => {
+  const loadAccountByTokenStub = makeLoadAccountByTokenStub()
   const sut = new AuthMiddleware(loadAccountByTokenStub)
 
   return {
