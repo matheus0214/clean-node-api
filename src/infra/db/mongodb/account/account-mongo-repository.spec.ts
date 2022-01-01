@@ -22,69 +22,75 @@ describe('Account Mongo Repository', () => {
     await accountCollection.deleteMany({})
   })
 
-  test('Should return an account on add success', async () => {
-    const sut = makeSut()
-    const account = await sut.add({
-      name: 'Maria Weaver',
-      email: 'lek@nuc.edu',
-      password: 'any_password'
-    })
+  describe('Add', () => {
+    test('Should return an account on add success', async () => {
+      const sut = makeSut()
+      const account = await sut.add({
+        name: 'Maria Weaver',
+        email: 'lek@nuc.edu',
+        password: 'any_password'
+      })
 
-    expect(account).toBeTruthy()
-    expect(account.id).toBeTruthy()
-    expect(account.name).toBe('Maria Weaver')
-    expect(account.email).toBe('lek@nuc.edu')
-    expect(account.password).toBe('any_password')
+      expect(account).toBeTruthy()
+      expect(account.id).toBeTruthy()
+      expect(account.name).toBe('Maria Weaver')
+      expect(account.email).toBe('lek@nuc.edu')
+      expect(account.password).toBe('any_password')
+    })
   })
 
-  test('Should return an account on loadByEmail success', async () => {
-    const sut = makeSut()
+  describe('LoadByEmail', () => {
+    test('Should return an account on loadByEmail success', async () => {
+      const sut = makeSut()
 
-    await accountCollection.insertOne({
-      name: 'Maria Weaver',
-      email: 'any_email@mail.com',
-      password: 'any_password'
+      await accountCollection.insertOne({
+        name: 'Maria Weaver',
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      })
+
+      const account = await sut.loadByEmail('any_email@mail.com')
+
+      expect(account).toBeTruthy()
+      expect(account?.id).toBeTruthy()
+      expect(account?.name).toBe('Maria Weaver')
+      expect(account?.email).toBe('any_email@mail.com')
+      expect(account?.password).toBe('any_password')
     })
 
-    const account = await sut.loadByEmail('any_email@mail.com')
+    test('Should return null if loadByEmail not find', async () => {
+      const sut = makeSut()
 
-    expect(account).toBeTruthy()
-    expect(account?.id).toBeTruthy()
-    expect(account?.name).toBe('Maria Weaver')
-    expect(account?.email).toBe('any_email@mail.com')
-    expect(account?.password).toBe('any_password')
+      const account = await sut.loadByEmail('any_email@mail.com')
+
+      expect(account).toBeFalsy()
+    })
   })
 
-  test('Should return null if loadByEmail not find', async () => {
-    const sut = makeSut()
+  describe('UpdateAccessToken', () => {
+    test('Should update the account accessToken on updateAccessToken success', async () => {
+      const sut = makeSut()
 
-    const account = await sut.loadByEmail('any_email@mail.com')
+      const createdAccount = await accountCollection.insertOne({
+        name: 'Maria Weaver',
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      })
 
-    expect(account).toBeFalsy()
-  })
+      const find = await accountCollection.findOne({
+        _id: createdAccount.insertedId
+      })
 
-  test('Should update the account accessToken on updateAccessToken success', async () => {
-    const sut = makeSut()
+      expect(find?.accessToken).toBeFalsy()
 
-    const createdAccount = await accountCollection.insertOne({
-      name: 'Maria Weaver',
-      email: 'any_email@mail.com',
-      password: 'any_password'
+      await sut.updateAccessToken(createdAccount.insertedId.toString(), 'token')
+
+      const account = await accountCollection.findOne({
+        _id: createdAccount.insertedId
+      })
+
+      expect(account).toBeTruthy()
+      expect(account?.accessToken).toBe('token')
     })
-
-    const find = await accountCollection.findOne({
-      _id: createdAccount.insertedId
-    })
-
-    expect(find?.accessToken).toBeFalsy()
-
-    await sut.updateAccessToken(createdAccount.insertedId.toString(), 'token')
-
-    const account = await accountCollection.findOne({
-      _id: createdAccount.insertedId
-    })
-
-    expect(account).toBeTruthy()
-    expect(account?.accessToken).toBe('token')
   })
 })
