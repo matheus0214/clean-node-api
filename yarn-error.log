@@ -1,0 +1,92 @@
+Arguments: 
+  /home/oem/.nvm/versions/node/v14.18.0/bin/node /home/oem/.nvm/versions/node/v14.18.0/bin/yarn add -D coverrals
+
+PATH: 
+  /home/oem/.nvm/versions/node/v14.18.0/bin:/home/oem/.zinit/polaris/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/oem/.dotnet/tools:/usr/local/go/bin:/usr/local/go/bin
+
+Yarn version: 
+  1.22.15
+
+Node version: 
+  14.18.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/coverrals: Not found
+      at Request.params.callback [as _callback] (/home/oem/.nvm/versions/node/v14.18.0/lib/node_modules/yarn/lib/cli.js:66140:18)
+      at Request.self.callback (/home/oem/.nvm/versions/node/v14.18.0/lib/node_modules/yarn/lib/cli.js:140885:22)
+      at Request.emit (events.js:400:28)
+      at Request.<anonymous> (/home/oem/.nvm/versions/node/v14.18.0/lib/node_modules/yarn/lib/cli.js:141857:10)
+      at Request.emit (events.js:400:28)
+      at IncomingMessage.<anonymous> (/home/oem/.nvm/versions/node/v14.18.0/lib/node_modules/yarn/lib/cli.js:141779:12)
+      at Object.onceWrapper (events.js:519:28)
+      at IncomingMessage.emit (events.js:412:35)
+      at endReadableNT (internal/streams/readable.js:1334:12)
+      at processTicksAndRejections (internal/process/task_queues.js:82:21)
+
+npm manifest: 
+  {
+    "name": "clean-node-api",
+    "version": "1.3.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "jest --passWithNoTests --silent --noStackTrace --runInBand --detectOpenHandles --no-cache",
+      "test:verbose": "jest --passWithNoTests --runInBand",
+      "test:unit": "npm test -- --watch -c jest-unit-config.js",
+      "test:integration": "npm test -- --watch -c jest-integration-config.js",
+      "test:staged": "jest --force-exit --passWithNoTests -c jest-staged-config.js",
+      "test:ci": "npm test -- --force-exit --coverage",
+      "dev": "ts-node-dev ./src/main/server.ts",
+      "start": "node ./dist/main/server.js",
+      "debug": "ts-node-dev  --inspect=0.0.0.0:9222 --exit-child --respawn  ./src/main/server.ts",
+      "build": "rimraf ./dist && tsc"
+    },
+    "engines": {
+      "node": "14.x"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "bcrypt": "^5.0.1",
+      "express": "^4.17.1",
+      "jsonwebtoken": "^8.5.1",
+      "mongodb": "^4.1.4",
+      "validator": "^13.7.0"
+    },
+    "devDependencies": {
+      "@shelf/jest-mongodb": "^2.1.0",
+      "@types/bcrypt": "^5.0.0",
+      "@types/express": "^4.17.13",
+      "@types/jest": "^27.0.2",
+      "@types/jsonwebtoken": "^8.5.6",
+      "@types/mongodb": "^4.0.7",
+      "@types/node": "^16.11.11",
+      "@types/supertest": "^2.0.11",
+      "@types/validator": "^13.6.6",
+      "@typescript-eslint/eslint-plugin": "^4.0.1",
+      "eslint": "^7.12.1",
+      "eslint-config-standard-with-typescript": "^21.0.1",
+      "eslint-plugin-import": "^2.22.1",
+      "eslint-plugin-node": "^11.1.0",
+      "eslint-plugin-promise": "^5.0.0",
+      "git-commit-msg-linter": "^3.2.8",
+      "husky": "^4.3.8",
+      "jest": "^27.3.1",
+      "lint-staged": "^11.2.6",
+      "rimraf": "^3.0.2",
+      "supertest": "^6.1.6",
+      "ts-jest": "^27.0.7",
+      "ts-node-dev": "^1.1.8",
+      "typescript": "^4.4.4"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
