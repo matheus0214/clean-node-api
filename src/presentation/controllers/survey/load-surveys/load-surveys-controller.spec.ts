@@ -34,7 +34,7 @@ interface SutTypes {
 
 const makeLoadSurveysStub = (): LoadSurveys => {
   class LoadSurveysStub implements LoadSurveys {
-    async load (): Promise<SurveyModel[]> {
+    async loadAll (): Promise<SurveyModel[]> {
       return makeFakeSurveys()
     }
   }
@@ -63,7 +63,7 @@ describe('LoadSurveys Controller', () => {
 
   it('should call LoadSurveys', async () => {
     const { sut, loadSurveysStub } = makeSut()
-    const spy = jest.spyOn(loadSurveysStub, 'load')
+    const spy = jest.spyOn(loadSurveysStub, 'loadAll')
 
     await sut.handle({})
 
@@ -81,7 +81,7 @@ describe('LoadSurveys Controller', () => {
   test('should return 500 if load surveys throws', async () => {
     const { sut, loadSurveysStub } = makeSut()
 
-    jest.spyOn(loadSurveysStub, 'load').mockImplementationOnce(() => {
+    jest.spyOn(loadSurveysStub, 'loadAll').mockImplementationOnce(() => {
       throw new Error('')
     })
 
@@ -93,7 +93,7 @@ describe('LoadSurveys Controller', () => {
   it('should return 204 if LoadSurveys return empty', async () => {
     const { sut, loadSurveysStub } = makeSut()
 
-    jest.spyOn(loadSurveysStub, 'load').mockReturnValueOnce(Promise.resolve([]))
+    jest.spyOn(loadSurveysStub, 'loadAll').mockReturnValueOnce(Promise.resolve([]))
 
     const response = await sut.handle({})
 
