@@ -9,6 +9,29 @@ import { ObjectId } from 'mongodb'
 let surveyCollection
 let accountCollection
 
+const makeAccessToken = async (role: string): Promise<string> => {
+  const user = await accountCollection.insertOne({
+    email: 'fulfiwbur@vubo.af',
+    password: 'any',
+    name: 'Viola Park',
+    role
+  })
+
+  const id = String(user.insertedId)
+
+  const accessToken = sign({ id }, env.jwtSecret)
+
+  await accountCollection.updateOne({
+    _id: new ObjectId(id)
+  }, {
+    $set: {
+      accessToken
+    }
+  })
+
+  return accessToken
+}
+
 describe('SurveyRoutes', () => {
   beforeAll(async () => {
     await MongoHelper.connect(global.__MONGO_URI__ ?? '')
@@ -41,24 +64,7 @@ describe('SurveyRoutes', () => {
     })
 
     test('Should return 204 on add survey with valid token', async () => {
-      const user = await accountCollection.insertOne({
-        email: 'fulfiwbur@vubo.af',
-        password: 'any',
-        name: 'Viola Park',
-        role: 'admin'
-      })
-
-      const id = String(user.insertedId)
-
-      const accessToken = sign({ id }, env.jwtSecret)
-
-      await accountCollection.updateOne({
-        _id: new ObjectId(id)
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+      const accessToken = await makeAccessToken('admin')
 
       await request(app)
         .post('/api/surveys')
@@ -82,25 +88,6 @@ describe('SurveyRoutes', () => {
     })
 
     test('Should return 200 on load surveys with valid token', async () => {
-      const user = await accountCollection.insertOne({
-        email: 'fulfiwbur@vubo.af',
-        password: 'any',
-        name: 'Viola Park',
-        role: 'user'
-      })
-
-      const id = String(user.insertedId)
-
-      const accessToken = sign({ id }, env.jwtSecret)
-
-      await accountCollection.updateOne({
-        _id: new ObjectId(id)
-      }, {
-        $set: {
-          accessToken
-        }
-      })
-
       await surveyCollection.insertMany([
         {
           question: 'any_question',
@@ -119,6 +106,8 @@ describe('SurveyRoutes', () => {
           date: new Date()
         }
       ])
+
+      const accessToken = await makeAccessToken('user')
 
       await request(app)
         .get('/api/surveys')
