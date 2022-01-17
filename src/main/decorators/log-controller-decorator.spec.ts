@@ -4,7 +4,7 @@ import { serverError, okCreated } from '../../presentation/helpers/http/http-hel
 import { Controller, HttpRequest, HttpResponse } from '../../presentation/protocols'
 import { LogControllerDecorator } from './log-controller-decorator'
 
-interface LogControllerTypes {
+type LogControllerTypes = {
   sut: LogControllerDecorator
   controllerStub: Controller
   logErrorRepositoryStub: LogErrorRepository

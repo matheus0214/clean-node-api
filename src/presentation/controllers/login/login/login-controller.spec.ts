@@ -8,7 +8,7 @@ import {
 } from './login-controller-protocols'
 import { LoginController } from './login-controller'
 
-interface LoginSutTypes {
+type LoginSutTypes = {
   sut: Controller
   validationStub: Validation
   authenticationStub: Authentication
