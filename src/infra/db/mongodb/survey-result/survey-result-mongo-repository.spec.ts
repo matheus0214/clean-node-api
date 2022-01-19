@@ -7,7 +7,7 @@ import { SurveyModel } from '@/domain/models/survey'
 import { AccountModel } from '@/domain/models'
 
 let accountsCollection: Collection
-// let surveyResultCollection: Collection
+let surveyResultCollection: Collection
 let surveyCollection: Collection
 
 const makeSut = (): SurveyResultMongoRepository => {
@@ -20,6 +20,10 @@ const makeSurvey = async (): Promise<SurveyModel> => {
     answers: [{
       answer: 'any_answer',
       image: 'any_image'
+    },
+    {
+      answer: 'other_answer',
+      image: 'other_image'
     }],
     date: new Date()
   })
@@ -60,6 +64,9 @@ describe('Survey Mongo Repository', () => {
     surveyCollection = await MongoHelper.getCollection('surveys')
     await surveyCollection.deleteMany({})
 
+    surveyResultCollection = await MongoHelper.getCollection('surveyResults')
+    await surveyCollection.deleteMany({})
+
     accountsCollection = await MongoHelper.getCollection('accounts')
     await surveyCollection.deleteMany({})
   })
@@ -79,6 +86,29 @@ describe('Survey Mongo Repository', () => {
 
       expect(inserted).toBeTruthy()
       expect(inserted?.id).toBeTruthy()
+    })
+
+    test('Should update a survey result if its new', async () => {
+      const survey = await makeSurvey()
+      const account = await makeAccount()
+      const res = await surveyResultCollection.insertOne({
+        surveyId: survey.id,
+        accountId: account.id,
+        answer: survey.answers[0].answer,
+        date: new Date()
+      })
+      const sut = makeSut()
+
+      const inserted = await sut.save({
+        surveyId: survey.id,
+        accountId: account.id,
+        answer: survey.answers[1].answer,
+        date: new Date()
+      })
+
+      expect(inserted).toBeTruthy()
+      expect(inserted?.id.toString()).toEqual(res.insertedId.toString())
+      expect(inserted?.answer).toEqual(survey.answers[1].answer)
     })
   })
 })
