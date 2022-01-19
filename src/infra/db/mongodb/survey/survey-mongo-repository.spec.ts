@@ -84,4 +84,27 @@ describe('Survey Mongo Repository', () => {
       expect(surveys.length).toBe(0)
     })
   })
+
+  describe('LoadById', () => {
+    test('Should load survey by id on success', async () => {
+      const inserted = await surveyCollection.insertOne(
+        {
+          question: 'any_question',
+          answers: [{
+            answer: 'any_answer',
+            image: 'any_image'
+          }],
+          date: new Date()
+        }
+      )
+
+      const id = inserted.insertedId.toString()
+
+      const sut = makeSut()
+
+      const survey = await sut.loadById(id)
+
+      expect(survey).toBeTruthy()
+    })
+  })
 })
