@@ -1,6 +1,6 @@
 import { AccountModel, AddAccountModel, Hasher, AddAccountRepository } from './db-add-account-protocols'
 import { DbAddAccount } from './db-add-account'
-import { LoadAccountByEmailRepository } from '../../protocols/db/account/load-account-by-email-repository'
+import { LoadAccountByEmailRepository } from '../../../protocols/db/account/load-account-by-email-repository'
 
 type DbAccountTypes = {
   sut: DbAddAccount
