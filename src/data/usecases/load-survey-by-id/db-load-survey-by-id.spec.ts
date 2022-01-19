@@ -57,4 +57,12 @@ describe('DbLoadSurveyById usecase', () => {
 
     expect(spy).toBeCalledWith('valid_id')
   })
+
+  it('should return survey on success', async () => {
+    const { sut } = makeSut()
+
+    const response = await sut.loadById('any_id')
+
+    expect(response).toEqual(makeFakeSurvey())
+  })
 })
