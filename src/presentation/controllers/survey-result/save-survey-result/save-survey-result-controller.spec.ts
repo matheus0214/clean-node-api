@@ -1,5 +1,6 @@
 
-import { SurveyModel } from '../../survey/load-surveys/load-surveys-protocols'
+import { InvalidParamError } from '../../login/login/login-controller-protocols'
+import { forbidden, SurveyModel } from '../../survey/load-surveys/load-surveys-protocols'
 import { SaveSurveyResultController } from './save-survey-result-controller'
 import { HttpRequest, LoadSurveyById } from './save-survey-result-controller-protocols'
 
@@ -59,5 +60,15 @@ describe('SaveSurveyResult controller', () => {
 
     expect(spy).toBeCalled()
     expect(spy).toBeCalledWith(makeFakeRequest().params.survey_id)
+  })
+
+  test('should return 403 if LoadSurveyById returns null', async () => {
+    const { sut, loadSurveyByIdStub } = makeSut()
+
+    jest.spyOn(loadSurveyByIdStub, 'loadById').mockReturnValueOnce(Promise.resolve(undefined))
+
+    const response = await sut.handle(makeFakeRequest())
+
+    expect(response).toEqual(forbidden(new InvalidParamError('surveyId')))
   })
 })
