@@ -7,7 +7,10 @@ import { HttpRequest, LoadSurveyById } from './save-survey-result-controller-pro
 const makeFakeRequest = (): HttpRequest => {
   return {
     params: {
-      survey_id: 'any'
+      surveyId: 'any'
+    },
+    body: {
+      answer: 'any_answer'
     }
   }
 }
@@ -59,7 +62,7 @@ describe('SaveSurveyResult controller', () => {
     await sut.handle(makeFakeRequest())
 
     expect(spy).toBeCalled()
-    expect(spy).toBeCalledWith(makeFakeRequest().params.survey_id)
+    expect(spy).toBeCalledWith(makeFakeRequest().params.surveyId)
   })
 
   test('should return 403 if LoadSurveyById returns null', async () => {
@@ -82,5 +85,20 @@ describe('SaveSurveyResult controller', () => {
     const httpResponse = await sut.handle({})
 
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('should return 403 if and invalid answer is provided', async () => {
+    const { sut } = makeSut()
+
+    const response = await sut.handle({
+      params: {
+        surveyId: 'any'
+      },
+      body: {
+        answer: 'wrong_answer'
+      }
+    })
+
+    expect(response).toEqual(forbidden(new InvalidParamError('answer')))
   })
 })
