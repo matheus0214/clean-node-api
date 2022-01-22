@@ -1,7 +1,7 @@
 import MockDate from 'mockdate'
 
 import { SurveyResultModel } from '@/domain/models/survey-result'
-import { SaveSurveyResult, SaveSurveyResultModel } from '@/domain/usecases/survey-result/save-survey-result'
+import { SaveSurveyResult, SaveSurveyResultParams } from '@/domain/usecases/survey-result/save-survey-result'
 import { ok, serverError } from '../../../helpers/http/http-helper'
 import { InvalidParamError } from '../../../errors/invalid-param-error'
 import { forbidden, SurveyModel } from '../../survey/load-surveys/load-surveys-protocols'
@@ -58,7 +58,7 @@ const makeLoadSurveyById = (): LoadSurveyById => {
 
 const makeSaveSurveyResultStub = (): SaveSurveyResult => {
   class SaveSurveyResultStub implements SaveSurveyResult {
-    async save (survey: SaveSurveyResultModel): Promise<SurveyResultModel | undefined> {
+    async save (survey: SaveSurveyResultParams): Promise<SurveyResultModel | undefined> {
       return makeFakeSurveyResultModel()
     }
   }

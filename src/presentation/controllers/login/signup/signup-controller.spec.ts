@@ -1,6 +1,6 @@
 import { SignUpController } from './signup-controller'
 import { EmailInUseError, MissingParamError, ServerError } from '@/presentation/errors'
-import { Validation, AccountModel, AddAccount, AddAccountModel, HttpRequest } from './signup-controller-protocols'
+import { Validation, AccountModel, AddAccount, AddAccountParams, HttpRequest } from './signup-controller-protocols'
 import { okCreated, serverError, badRequest, forbidden } from '@/presentation/helpers/http/http-helper'
 import { Authentication } from '@/domain/usecases/account/authentication'
 
@@ -30,7 +30,7 @@ const makeAuthenticationStub = (): Authentication => {
 
 const makeAddAccountStub = (): AddAccount => {
   class AddAccountStub {
-    async add (account: AddAccountModel): Promise<AccountModel> {
+    async add (account: AddAccountParams): Promise<AccountModel> {
       return await new Promise(resolve => resolve(makeFakeAccount()))
     }
   }
@@ -75,7 +75,7 @@ describe('SignUp Controller', () => {
   test('Should return 500 if AddAccount throws', async () => {
     const { sut, addAccountStub } = makeSut()
 
-    jest.spyOn(addAccountStub, 'add').mockImplementation(async (account: AddAccountModel) => {
+    jest.spyOn(addAccountStub, 'add').mockImplementation(async (account: AddAccountParams) => {
       return await new Promise((resolve, reject) => reject(new Error()))
     })
 

@@ -1,4 +1,4 @@
-import { AccountModel, AddAccountModel, Hasher, AddAccountRepository } from './db-add-account-protocols'
+import { AccountModel, AddAccountParams, Hasher, AddAccountRepository } from './db-add-account-protocols'
 import { DbAddAccount } from './db-add-account'
 import { LoadAccountByEmailRepository } from '../../../protocols/db/account/load-account-by-email-repository'
 
@@ -36,7 +36,7 @@ const makeFakeAccount = (): AccountModel => ({
   password: 'Z1fPiNQOIUzwBwG2duA1MO4t2KSg'
 })
 
-const makeFakeAccountData = (): AddAccountModel => ({
+const makeFakeAccountData = (): AddAccountParams => ({
   name: 'Terry Mills',
   email: 'zilsu@pitarcu.gs',
   password: 'value_encrypt'
@@ -44,7 +44,7 @@ const makeFakeAccountData = (): AddAccountModel => ({
 
 const makeAddAccountRepositoryStub = (): AddAccountRepository => {
   class AddAccountRepositoryStub implements AddAccountRepository {
-    async add (account: AddAccountModel): Promise<AccountModel> {
+    async add (account: AddAccountParams): Promise<AccountModel> {
       return await new Promise(resolve => resolve(makeFakeAccount()))
     }
   }

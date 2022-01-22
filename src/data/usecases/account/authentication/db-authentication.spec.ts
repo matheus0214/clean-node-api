@@ -1,7 +1,7 @@
 import { AccountModel } from '../add-account/db-add-account-protocols'
 import { DbAuthentication } from './db-authentication'
 import {
-  AuthenticationModel,
+  AuthenticationParams,
   HashCompare,
   Encrypter,
   LoadAccountByEmailRepository,
@@ -27,7 +27,7 @@ const makeLoadAccountByEmailRepositoryStub = (): LoadAccountByEmailRepository =>
   return new LoadAccountByEmailRepositoryStub()
 }
 
-const makeFakeAuthentication = (): AuthenticationModel => {
+const makeFakeAuthentication = (): AuthenticationParams => {
   return {
     email: 'any_email@mail.com',
     password: 'any_password'
