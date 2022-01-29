@@ -2,34 +2,17 @@
 import MockDate from 'mockdate'
 
 import { DbAddSurvey } from './db-add-survey'
-import { AddSurveyRepository, AddSurveyParams } from './add-survey-protocols'
-
-const makeFakeSurveyData = (): AddSurveyParams => {
-  return {
-    question: 'any_question',
-    answers: [{
-      image: 'any_image',
-      answer: 'any_answer'
-    }],
-    date: new Date()
-  }
-}
+import { AddSurveyRepository } from './add-survey-protocols'
+import { mockAddSurveyRepository } from '@/data/test'
+import { mockAddSurveyParams } from '@/domain/test'
 
 type ISutTypes = {
   sut: DbAddSurvey
   addSurveyRepositoryStub: AddSurveyRepository
 }
 
-const makeAddSurveyRepositoryStub = (): AddSurveyRepository => {
-  class AddSurveyRepositoryStub implements AddSurveyRepository {
-    async add (account: AddSurveyParams): Promise<void> {}
-  }
-
-  return new AddSurveyRepositoryStub()
-}
-
 const makeSut = (): ISutTypes => {
-  const addSurveyRepositoryStub = makeAddSurveyRepositoryStub()
+  const addSurveyRepositoryStub = mockAddSurveyRepository()
   const sut = new DbAddSurvey(addSurveyRepositoryStub)
 
   return { sut, addSurveyRepositoryStub }
@@ -48,7 +31,7 @@ describe('DbAddSurvey Usecase', () => {
 
     const spy = jest.spyOn(addSurveyRepositoryStub, 'add')
 
-    const data = makeFakeSurveyData()
+    const data = mockAddSurveyParams()
 
     await sut.add(data)
 
@@ -63,7 +46,7 @@ describe('DbAddSurvey Usecase', () => {
       new Promise((resolve, reject) => reject(new Error()))
     )
 
-    const promise = sut.add(makeFakeSurveyData())
+    const promise = sut.add(mockAddSurveyParams())
 
     await expect(promise).rejects.toThrow()
   })

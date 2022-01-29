@@ -1,3 +1,4 @@
+import { mockFakeAccountData } from '@/domain/test'
 import { Collection } from 'mongodb'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { AccountMongoRepository } from './account-mongo-repository'
@@ -25,17 +26,13 @@ describe('Account Mongo Repository', () => {
   describe('Add', () => {
     test('Should return an account on add success', async () => {
       const sut = makeSut()
-      const account = await sut.add({
-        name: 'Maria Weaver',
-        email: 'lek@nuc.edu',
-        password: 'any_password'
-      })
+      const account = await sut.add(mockFakeAccountData())
 
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe('Maria Weaver')
-      expect(account.email).toBe('lek@nuc.edu')
-      expect(account.password).toBe('any_password')
+      expect(account.name).toBe(mockFakeAccountData().name)
+      expect(account.email).toBe(mockFakeAccountData().email)
+      expect(account.password).toBe(mockFakeAccountData().password)
     })
   })
 
@@ -43,19 +40,15 @@ describe('Account Mongo Repository', () => {
     test('Should return an account on loadByEmail success', async () => {
       const sut = makeSut()
 
-      await accountCollection.insertOne({
-        name: 'Maria Weaver',
-        email: 'any_email@mail.com',
-        password: 'any_password'
-      })
+      await accountCollection.insertOne(mockFakeAccountData())
 
       const account = await sut.loadByEmail('any_email@mail.com')
 
       expect(account).toBeTruthy()
       expect(account?.id).toBeTruthy()
-      expect(account?.name).toBe('Maria Weaver')
-      expect(account?.email).toBe('any_email@mail.com')
-      expect(account?.password).toBe('any_password')
+      expect(account?.name).toBe(mockFakeAccountData().name)
+      expect(account?.email).toBe(mockFakeAccountData().email)
+      expect(account?.password).toBe(mockFakeAccountData().password)
     })
 
     test('Should return null if loadByEmail not find', async () => {
@@ -71,11 +64,7 @@ describe('Account Mongo Repository', () => {
     test('Should update the account accessToken on updateAccessToken success', async () => {
       const sut = makeSut()
 
-      const createdAccount = await accountCollection.insertOne({
-        name: 'Maria Weaver',
-        email: 'any_email@mail.com',
-        password: 'any_password'
-      })
+      const createdAccount = await accountCollection.insertOne(mockFakeAccountData())
 
       const find = await accountCollection.findOne({
         _id: createdAccount.insertedId

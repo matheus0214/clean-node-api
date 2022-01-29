@@ -1,47 +1,18 @@
 
 import { SaveSurveyResultRepository } from '@/data/protocols/db/survey-result/save-survey-result-repository'
-import { SurveyResultModel } from '@/domain/models/survey-result'
-import { SaveSurveyResultParams } from '@/domain/usecases/survey-result/save-survey-result'
+import { mockSaveSurveyResultRepository } from '@/data/test'
+import { mockSurveyResultModel, mockSurveyResultParams } from '@/domain/test/mock-survey-result'
 import MockDate from 'mockdate'
 
 import { DbSaveSurveyResult } from './db-save-survey-result'
-
-const makeFakeSurveyResult = (): SurveyResultModel => {
-  return {
-    id: 'any_id',
-    accountId: 'any_account_id',
-    surveyId: 'any_survey_id',
-    answer: 'any_answer',
-    date: new Date()
-  }
-}
-
-const makeFakeSurveyResultData = (): SaveSurveyResultParams => {
-  return {
-    accountId: 'any_account_id',
-    surveyId: 'any_survey_id',
-    answer: 'any_answer',
-    date: new Date()
-  }
-}
 
 type ISutTypes = {
   sut: DbSaveSurveyResult
   saveSurveyResultRepositoryStub: SaveSurveyResultRepository
 }
 
-const makeSaveSurveyResultRepositoryStub = (): SaveSurveyResultRepository => {
-  class SaveSurveyResultRepositoryStub implements SaveSurveyResultRepository {
-    async save (survey: SaveSurveyResultParams): Promise<SurveyResultModel | undefined> {
-      return makeFakeSurveyResult()
-    }
-  }
-
-  return new SaveSurveyResultRepositoryStub()
-}
-
 const makeSut = (): ISutTypes => {
-  const saveSurveyResultRepositoryStub = makeSaveSurveyResultRepositoryStub()
+  const saveSurveyResultRepositoryStub = mockSaveSurveyResultRepository()
   const sut = new DbSaveSurveyResult(saveSurveyResultRepositoryStub)
 
   return { sut, saveSurveyResultRepositoryStub }
@@ -60,7 +31,7 @@ describe('DbSaveSurveyResult Usecase', () => {
 
     const spy = jest.spyOn(saveSurveyResultRepositoryStub, 'save')
 
-    const data = makeFakeSurveyResultData()
+    const data = mockSurveyResultParams()
 
     await sut.save(data)
 
@@ -75,7 +46,7 @@ describe('DbSaveSurveyResult Usecase', () => {
       new Promise((resolve, reject) => reject(new Error()))
     )
 
-    const data = makeFakeSurveyResultData()
+    const data = mockSurveyResultParams()
 
     const promise = sut.save(data)
 
@@ -85,8 +56,8 @@ describe('DbSaveSurveyResult Usecase', () => {
   it('should return survey on success', async () => {
     const { sut } = makeSut()
 
-    const response = await sut.save(makeFakeSurveyResultData())
+    const response = await sut.save(mockSurveyResultParams())
 
-    expect(response).toEqual(makeFakeSurveyResult())
+    expect(response).toEqual(mockSurveyResultModel())
   })
 })
