@@ -4,11 +4,13 @@ import { notFoundComponent } from './components/not-found-component'
 import { serverErrorComponent } from './components/server-error-component'
 import { unauthorizedComponent } from './components/unauthorized-component'
 import { loginPath } from './paths/login-path'
+import { signUpPath } from './paths/signup-path'
 import { surveyPath } from './paths/surveys-path'
 import { accountSchema } from './schemas/account-schema'
 import { apiKeyAuthSchema } from './schemas/api-key-auth-schema'
 import { errorSchema } from './schemas/error-schema'
 import { loginParamsSchema } from './schemas/login-params-schema '
+import { signUpParamsSchema } from './schemas/signup-params-schema'
 import { surveyAnswerSchema } from './schemas/survey-answer-schema'
 import { surveySchema } from './schemas/survey-schema'
 import { surveysSchema } from './schemas/surveys-schema'
@@ -33,11 +35,13 @@ export default {
   ],
   paths: {
     '/login': loginPath,
-    '/surveys': surveyPath
+    '/surveys': surveyPath,
+    '/signup': signUpPath
   },
   schemas: {
     account: accountSchema,
     loginParams: loginParamsSchema,
+    signUpParams: signUpParamsSchema,
     error: errorSchema,
     survey: surveySchema,
     surveys: surveysSchema,
