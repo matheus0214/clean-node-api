@@ -5,7 +5,7 @@ import {
   serverErrorComponent,
   unauthorizedComponent
 } from './components/'
-import { apiKeyAuthSchema } from './schemas'
+import { apiKeyAuthSchema } from './schemas/'
 
 export default {
   components: {
