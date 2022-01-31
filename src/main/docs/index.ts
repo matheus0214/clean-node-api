@@ -16,7 +16,8 @@ import {
   signUpParamsSchema,
   surveyAnswerSchema,
   surveySchema,
-  surveysSchema
+  surveysSchema,
+  addSurveyParamsSchema
 } from './schemas'
 
 export default {
@@ -49,7 +50,8 @@ export default {
     error: errorSchema,
     survey: surveySchema,
     surveys: surveysSchema,
-    surveyAnswer: surveyAnswerSchema
+    surveyAnswer: surveyAnswerSchema,
+    addSurveyParams: addSurveyParamsSchema
   },
   components: {
     securitySchemes: {
