@@ -1,3 +1,4 @@
+import { LoadSurveyResultRepository } from '../../load-survey-result/db-load-survey-result-protocols'
 import {
   SaveSurveyResultRepository,
   SurveyResultModel,
@@ -7,11 +8,13 @@ import {
 
 export class DbSaveSurveyResult implements SaveSurveyResult {
   constructor (
-    private readonly saveSurveyResultRepository: SaveSurveyResultRepository
+    private readonly saveSurveyResultRepository: SaveSurveyResultRepository,
+    private readonly loadSurveyResultRepository: LoadSurveyResultRepository
   ) {}
 
   async save (survey: SaveSurveyResultParams): Promise<SurveyResultModel | undefined> {
-    const result = await this.saveSurveyResultRepository.save(survey)
+    await this.saveSurveyResultRepository.save(survey)
+    const result = await this.loadSurveyResultRepository.loadBySurveyId(survey.surveyId)
     if (result) {
       return result
     }
