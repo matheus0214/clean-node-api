@@ -165,5 +165,15 @@ describe('Survey Mongo Repository', () => {
       expect(inserted?.answers[2].count).toBe(0)
       expect(inserted?.answers[2].percent).toBe(0)
     })
+
+    test('Should return undefined if not find any survey result', async () => {
+      const survey = await makeSurvey()
+
+      const sut = makeSut()
+
+      const inserted = await sut.loadBySurveyId(survey.id)
+
+      expect(inserted).toBeFalsy()
+    })
   })
 })
