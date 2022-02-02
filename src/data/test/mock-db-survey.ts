@@ -1,7 +1,10 @@
-import { mockSurveyModels } from '@/domain/test'
+import { mockSurveyModel, mockSurveyModels } from '@/domain/test'
 import { LoadSurveysRepository } from '../protocols/db/survey/load-surveys-repository'
 import { AddSurveyParams, AddSurveyRepository } from '../usecases/survey/add-survey/add-survey-protocols'
-import { SurveyModel } from '../usecases/survey/load-survey-by-id/db-load-survey-by-id-protocols'
+import {
+  LoadSurveyByIdRepository,
+  SurveyModel
+} from '../usecases/survey/load-survey-by-id/db-load-survey-by-id-protocols'
 
 export const mockAddSurveyRepository = (): AddSurveyRepository => {
   class AddSurveyRepositoryStub implements AddSurveyRepository {
@@ -19,4 +22,14 @@ export const mockLoadSurveysRepository = (): LoadSurveysRepository => {
   }
 
   return new LoadSurveysRepositoryStub()
+}
+
+export const mockLoadSurveyByIdRepository = (): LoadSurveyByIdRepository => {
+  class LoadSurveyByIdRepositoryStub implements LoadSurveyByIdRepository {
+    async loadById (id: string): Promise<SurveyModel> {
+      return mockSurveyModel()
+    }
+  }
+
+  return new LoadSurveyByIdRepositoryStub()
 }
