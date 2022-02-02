@@ -1,5 +1,6 @@
+import { mockSurveyResultModel } from '@/domain/test/mock-survey-result'
 import { LoadSurveyResult } from '@/domain/usecases/survey-result/load-survey-result'
-import { forbidden, serverError } from '@/presentation/helpers/http/http-helper'
+import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { mockLoadSurveyResult } from '@/presentation/test'
 import { mockLoadSurveyById } from '@/presentation/test/mock-load-survey'
 import { InvalidParamError } from '../../login/login/login-controller-protocols'
@@ -83,5 +84,13 @@ describe('LoadSurveyResultController', () => {
     const httpResponse = await sut.handle(mockRequest())
 
     expect(httpResponse).toEqual(serverError(new Error('')))
+  })
+
+  test('should return 200 on success', async () => {
+    const { sut } = makeSut()
+
+    const httpResponse = await sut.handle(mockRequest())
+
+    expect(httpResponse).toEqual(ok(mockSurveyResultModel()))
   })
 })
