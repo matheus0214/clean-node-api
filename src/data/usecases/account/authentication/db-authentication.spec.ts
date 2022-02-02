@@ -3,7 +3,7 @@ import {
   mockHashCompare,
   mockLoadAccountByEmailRepository, mockUpdateAccessTokenRepository
 } from '@/data/test'
-import { mockFakeAuthentication } from '@/domain/test'
+import { mockFakeAccountModel, mockFakeAuthentication } from '@/domain/test'
 import { DbAuthentication } from './db-authentication'
 import {
   HashCompare,
@@ -129,12 +129,13 @@ describe('DbAuthentication UseCase', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('Should throw if EncrypterGenerator throws', async () => {
+  test('Should return a token on success', async () => {
     const { sut } = makeSut()
 
-    const accessToken = await sut.auth(mockFakeAuthentication())
+    const response = await sut.auth(mockFakeAuthentication())
 
-    expect(accessToken).toBe('token')
+    expect(response?.accessToken).toBe('token')
+    expect(response?.name).toBe(mockFakeAccountModel().name)
   })
 
   test('Should call UpdateAccessTokenRepository with correct values', async () => {

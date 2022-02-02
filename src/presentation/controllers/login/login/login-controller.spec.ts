@@ -8,6 +8,7 @@ import {
 } from './login-controller-protocols'
 import { LoginController } from './login-controller'
 import { mockAuthentication, mockValidation } from '@/presentation/test'
+import { mockFakeAccountModel } from '@/domain/test'
 
 type LoginSutTypes = {
   sut: Controller
@@ -47,7 +48,7 @@ describe('Login Controller', () => {
   test('Should return 401 if invalid credentials are provided', async () => {
     const { sut, authenticationStub } = makeSut()
 
-    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(new Promise((resolve) => resolve('')))
+    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(new Promise((resolve) => resolve(null)))
 
     const httpResponse = await sut.handle(mockRequest())
 
@@ -71,7 +72,7 @@ describe('Login Controller', () => {
 
     const httpResponse = await sut.handle(mockRequest())
 
-    expect(httpResponse).toEqual(ok({ accessToken: 'access_token' }))
+    expect(httpResponse).toEqual(ok({ accessToken: 'access_token', name: mockFakeAccountModel().name }))
   })
 
   test('Should call Validatoin with correct values', async () => {

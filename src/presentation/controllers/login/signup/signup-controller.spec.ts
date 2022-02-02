@@ -4,6 +4,7 @@ import { Validation, AddAccount, AddAccountParams, HttpRequest } from './signup-
 import { okCreated, serverError, badRequest, forbidden } from '@/presentation/helpers/http/http-helper'
 import { Authentication } from '@/domain/usecases/account/authentication'
 import { mockAuthentication, mockValidation, mockAddAccount } from '@/presentation/test'
+import { mockFakeAccountModel } from '@/domain/test'
 
 type SutTypes = {
   sut: SignUpController
@@ -80,7 +81,8 @@ describe('SignUp Controller', () => {
     const response = await sut.handle(makeFakeRequest())
 
     expect(response).toEqual(okCreated({
-      accessToken: 'access_token'
+      accessToken: 'access_token',
+      name: mockFakeAccountModel().name
     }))
   })
 
