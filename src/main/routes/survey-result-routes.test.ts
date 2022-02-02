@@ -96,5 +96,14 @@ describe('SurveyRoutes', () => {
         .get('/api/surveys/any_id/results')
         .expect(403)
     })
+
+    test('Should return 200 on save survey result with accessToken', async () => {
+      const survey = await makeFakeSurvey()
+      const accessToken = await makeAccessToken('admin')
+      await request(app)
+        .get(`/api/surveys/${survey.id.toString()}/results`)
+        .set('x-access-token', accessToken)
+        .expect(200)
+    })
   })
 })
