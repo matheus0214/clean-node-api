@@ -4,7 +4,8 @@ import {
   HttpResponse,
   LoadSurveyById,
   forbidden,
-  InvalidParamError
+  InvalidParamError,
+  serverError
 } from './load-survey-result-controller-protocols'
 
 export class LoadSurveyResultController implements Controller {
@@ -13,16 +14,20 @@ export class LoadSurveyResultController implements Controller {
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const { surveyId } = httpRequest.params
-    const survey = await this.loadSurveyById.loadById(surveyId)
+    try {
+      const { surveyId } = httpRequest.params
+      const survey = await this.loadSurveyById.loadById(surveyId)
 
-    if (!survey) {
-      return forbidden(new InvalidParamError('surveyId'))
-    }
+      if (!survey) {
+        return forbidden(new InvalidParamError('surveyId'))
+      }
 
-    return {
-      statusCode: 200,
-      body: {}
+      return {
+        statusCode: 200,
+        body: {}
+      }
+    } catch (error) {
+      return serverError(error)
     }
   }
 }
