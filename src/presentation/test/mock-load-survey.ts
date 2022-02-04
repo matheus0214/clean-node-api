@@ -5,7 +5,7 @@ import { SurveyModel } from '../controllers/survey/load-surveys/load-surveys-pro
 
 export const mockLoadSurveys = (): LoadSurveys => {
   class LoadSurveysStub implements LoadSurveys {
-    async loadAll (): Promise<SurveyModel[]> {
+    async load (accountId: string): Promise<SurveyModel[]> {
       return mockSurveyModels()
     }
   }

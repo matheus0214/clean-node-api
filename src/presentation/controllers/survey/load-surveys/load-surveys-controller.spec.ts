@@ -1,14 +1,20 @@
 import MockDate from 'mockdate'
 
 import { LoadSurveysController } from './load-surveys-controller'
-import { LoadSurveys } from './load-surveys-protocols'
+import { HttpRequest, LoadSurveys } from './load-surveys-protocols'
 import { ok, serverError, noContent } from '@/presentation/helpers/http/http-helper'
 import { mockLoadSurveys } from '@/presentation/test/mock-load-survey'
-import { mockSurveyModels } from '@/domain/test'
+import { mockFakeAccountModel, mockSurveyModels } from '@/domain/test'
 
 type SutTypes = {
   sut: LoadSurveysController
   loadSurveysStub: LoadSurveys
+}
+
+const mockRequest = (): HttpRequest => {
+  return {
+    accountId: mockFakeAccountModel().id
+  }
 }
 
 const makeSut = (): SutTypes => {
@@ -30,19 +36,21 @@ describe('LoadSurveys Controller', () => {
     MockDate.reset()
   })
 
-  it('should call LoadSurveys', async () => {
+  it('should call LoadSurveys wit correct value', async () => {
     const { sut, loadSurveysStub } = makeSut()
-    const spy = jest.spyOn(loadSurveysStub, 'loadAll')
+    const spy = jest.spyOn(loadSurveysStub, 'load')
 
-    await sut.handle({})
+    const httpRequest = mockRequest()
+    await sut.handle(httpRequest)
 
     expect(spy).toHaveBeenCalled()
+    expect(spy).toHaveBeenCalledWith(mockFakeAccountModel().id)
   })
 
   it('should return 200 on success', async () => {
     const { sut } = makeSut()
 
-    const response = await sut.handle({})
+    const response = await sut.handle(mockRequest())
 
     expect(response).toEqual(ok(mockSurveyModels()))
   })
@@ -50,11 +58,11 @@ describe('LoadSurveys Controller', () => {
   test('should return 500 if load surveys throws', async () => {
     const { sut, loadSurveysStub } = makeSut()
 
-    jest.spyOn(loadSurveysStub, 'loadAll').mockImplementationOnce(() => {
+    jest.spyOn(loadSurveysStub, 'load').mockImplementationOnce(() => {
       throw new Error('')
     })
 
-    const httpResponse = await sut.handle({})
+    const httpResponse = await sut.handle(mockRequest())
 
     expect(httpResponse).toEqual(serverError(new Error()))
   })
@@ -62,9 +70,9 @@ describe('LoadSurveys Controller', () => {
   it('should return 204 if LoadSurveys return empty', async () => {
     const { sut, loadSurveysStub } = makeSut()
 
-    jest.spyOn(loadSurveysStub, 'loadAll').mockReturnValueOnce(Promise.resolve([]))
+    jest.spyOn(loadSurveysStub, 'load').mockReturnValueOnce(Promise.resolve([]))
 
-    const response = await sut.handle({})
+    const response = await sut.handle(mockRequest())
 
     expect(response).toEqual(noContent())
   })
