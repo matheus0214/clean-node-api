@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb'
+import round from 'mongo-round'
 
 import {
   SaveSurveyResultParams,
@@ -28,7 +29,7 @@ export class SurveyResultMongoRepository implements
     })
   }
 
-  async loadBySurveyId (surveyId: string): Promise<SurveyResultModel | undefined> {
+  async loadBySurveyId (surveyId: string, accountId: string): Promise<SurveyResultModel | undefined> {
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
     const query = new QueryBuilder()
       .match({
@@ -66,6 +67,11 @@ export class SurveyResultMongoRepository implements
         },
         count: {
           $sum: 1
+        },
+        currentAccountAnswer: {
+          $push: {
+            $cond: [{ $eq: ['$data.accountId', new ObjectId(accountId)] }, '$data.answer', '$invalid']
+          }
         }
       })
       .project({
@@ -100,6 +106,13 @@ export class SurveyResultMongoRepository implements
                     },
                     else: 0
                   }
+                },
+                isCurrentAccountAnswerCount: {
+                  $cond: [{
+                    $eq: ['$$item.answer', {
+                      $arrayElemAt: ['$currentAccountAnswer', 0]
+                    }]
+                  }, 1, 0]
                 }
               }]
             }
@@ -147,6 +160,9 @@ export class SurveyResultMongoRepository implements
         },
         percent: {
           $sum: '$answers.percent'
+        },
+        isCurrentAccountAnswerCount: {
+          $sum: '$answers.isCurrentAccountAnswerCount'
         }
       })
       .project({
@@ -157,8 +173,11 @@ export class SurveyResultMongoRepository implements
         answer: {
           answer: '$_id.answer',
           image: '$_id.image',
-          count: '$count',
-          percent: '$percent'
+          count: round('$count'),
+          percent: round('$percent'),
+          isCurrentAccountAnswer: {
+            $eq: ['$isCurrentAccountAnswerCount', 1]
+          }
         }
       })
       .sort({

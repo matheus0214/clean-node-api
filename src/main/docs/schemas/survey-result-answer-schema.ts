@@ -12,6 +12,9 @@ export const surveyResultAnswerSchema = {
     },
     percent: {
       type: 'double'
+    },
+    isCurrentAccountAnswer: {
+      type: 'boolean'
     }
   }
 }

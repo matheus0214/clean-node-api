@@ -52,7 +52,7 @@ describe('DbSaveSurveyResult Usecase', () => {
     await sut.save(data)
 
     expect(spy).toBeCalledTimes(1)
-    expect(spy).toBeCalledWith(data.surveyId)
+    expect(spy).toBeCalledWith(data.surveyId, data.accountId)
   })
 
   it('should throw if saveSurveyResultRepositoryStub throws', async () => {

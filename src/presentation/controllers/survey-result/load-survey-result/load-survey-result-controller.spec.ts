@@ -8,12 +8,14 @@ import { mockLoadSurveyById } from '@/presentation/test/mock-load-survey'
 import { InvalidParamError } from '../../login/login/login-controller-protocols'
 import { LoadSurveyResultController } from './load-survey-result-controller'
 import { HttpRequest, LoadSurveyById } from './load-survey-result-controller-protocols'
+import { mockFakeAccountModel } from '@/domain/test'
 
 const mockRequest = (): HttpRequest => {
   return {
     params: {
       surveyId: 'any_id'
-    }
+    },
+    accountId: mockFakeAccountModel().id
   }
 }
 
@@ -75,14 +77,14 @@ describe('LoadSurveyResultController', () => {
     expect(httpResponse).toEqual(serverError(new Error('')))
   })
 
-  test('should call LoadSurveyResult with correct value', async () => {
+  test('should call LoadSurveyResult with correct values', async () => {
     const { loadSurveyResultStub, sut } = makeSut()
     const spy = jest.spyOn(loadSurveyResultStub, 'load')
 
     await sut.handle(mockRequest())
 
     expect(spy).toBeCalled()
-    expect(spy).toBeCalledWith('any_id')
+    expect(spy).toBeCalledWith('any_id', mockFakeAccountModel().id)
   })
 
   test('should return 500 if LoadSurveyResult throws', async () => {
