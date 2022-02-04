@@ -84,9 +84,9 @@ describe('DbLoadAccountByYoken usecase', () => {
       new Promise((resolve, reject) => reject(new Error()))
     )
 
-    const promise = sut.load('any_token', 'any_role')
+    const account = await sut.load('any_token', 'any_role')
 
-    await expect(promise).rejects.toThrow()
+    expect(account).toBeFalsy()
   })
 
   test('Should throw if loadAccountByTokenRepositoryStub throws', async () => {
